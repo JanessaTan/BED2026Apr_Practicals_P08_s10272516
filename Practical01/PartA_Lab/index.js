@@ -6,10 +6,6 @@ app.get("/", (req, res) => {
   res.send("Hello from Express!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
-
 // Define route for About Page
 app.get("/about", (req, res) => {
   res.send("About Page");
