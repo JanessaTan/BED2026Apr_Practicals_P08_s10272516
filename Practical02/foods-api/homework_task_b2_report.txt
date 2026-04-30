@@ -1,0 +1,19 @@
+In your foods-api API, describe the role of the following elements:
+- app.use(express.json()): Middleware that parses JSON request bodies.
+- req.body: Request body that contains data sent to the server.
+- req.query: Query parameter that provides additional information or filters for the request.
+- req.params.id: Route parameter that captures values (food id) in the URL path.
+
+Describe the significance of using different HTTP methods (e.g., GET, POST, PUT, DELETE) in your API. 
+How do they relate to CRUD operations?
+- GET retrieves all food items in the foods array. (Read)
+- POST creates a new food resource. (Create)
+- PUT updates an existing food item identified by id. (Update)
+- DELETE deletes a food item identified by id. (Delete)
+
+Explain the meaning of these HTTP status codes:
+- 200 OK: The HTTP request succeeded.
+- 201 Created: The request was fulfilled and a new resource was created.
+- 400 Bad Request: Server cannot or will not process a request due to a client error.
+- 404 Not Found: Server cannot find the requested resource.
+- 500 Internal Server Error: Server encountered an unexpected condition and cannot fulfill the request.

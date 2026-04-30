@@ -16,7 +16,8 @@ Did you face any challenges while building the CRUD operations?
 Q&A:
 
 Why use POST for creating resources and PUT for updating?
-- POST only creates new resources, and PUT updates existing resources without creating new ones.
+- POST creates new resources but cannot change existing ones. 
+- PUT updates existing resources but cannot create new ones.
 
 What status code should be returned when attempting to update a non-existent resource?
 - 404 Not Found
