@@ -1,0 +1,22 @@
+Reflection:
+
+What did you learn about REST APIs?
+- I learned that REST APIs communicate through HTTP requests to perform CRUD operations (Create, Read, Update, Delete).
+
+How did you understand the use of HTTP methods (GET, POST, PUT, DELETE)?
+- GET Retrieves data from a server without modifying it.
+- PUT Updates or replaces an existing resource on the server.
+- POST Creates a new resource on the server.
+- DELETE Removes a resource from the server permanently.
+
+Did you face any challenges while building the CRUD operations?
+- Forgot to add body JSON for the POST and PUT methods to create and update foods
+
+
+Q&A:
+
+Why use POST for creating resources and PUT for updating?
+- POST only creates new resources, and PUT updates existing resources without creating new ones.
+
+What status code should be returned when attempting to update a non-existent resource?
+- 404 Not Found
