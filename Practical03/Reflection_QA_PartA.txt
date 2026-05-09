@@ -1,0 +1,16 @@
+Write a brief reflection (at least 2-3 sentences) on the concepts you learned during Part A: Lab Activity of the practical.
+- I learned how to configure Microsoft SQL Server Express and Server Management Studio to allow Node.js to connect to the database.
+- I learned how to perform SQL query CRUD operations through the Node.js app code.
+
+Look at the code in the final app.js file (where all logic is in routes and no validation). How easy or difficult is it to read and understand what's happening in each route handler compared to when the database logic was in separate functions?
+- It is much more difficult to understand what's happening because there is a lot more code in the handlers.
+The code connects to the database pool, executes queries, retrieves results and sends them back as JSON, not required for the database logic in separate functions
+
+If you found a bug in how books are created in the database, 
+which version of app.js would make it easiest to isolate and fix that bug?
+- The route handler with all the code has error handlers so it may be easier to diagnose the error cause from the error messages.
+However route handlers with separate databse logic have code that is easier to understand, so for that it is easier to manually fix bugs.
+
+Did you face any challenges while implementing this practical?
+- I was unsure if I had to change the server name placeholder value "localhost" in dbConfig.js.
+  I thought it was necessary and I encountered an error.
