@@ -10,4 +10,5 @@ VALUES
   ('The Lord of the Rings', 'J.R.R. Tolkien'),
   ('Pride and Prejudice', 'Jane Austen');
 */
-SELECT TOP (1000) id, title, author FROM bed_db.dbo.Books
+
+SELECT id, title, author FROM bed_db.dbo.Books

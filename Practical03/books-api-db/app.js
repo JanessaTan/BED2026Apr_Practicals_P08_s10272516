@@ -134,3 +134,97 @@ app.post("/books", async (req, res) => {
     }
   }
 });
+
+
+// --- PUT ROUTE ---
+
+// PUT update book by ID
+app.put("/books/:id", async (req, res) => {
+  const bookId = parseInt(req.params.id);
+  if (isNaN(bookId)) {
+    return res.status(400).send("Invalid book ID");
+  }
+  const updateBookData = req.body
+  
+  let connection;
+  try {
+    connection = await sql.connect(dbConfig); // Get the database connection
+    const sqlQuery = `UPDATE Books SET title = @title, author = @author WHERE id LIKE @id; SELECT SCOPE_IDENTITY() AS id;`;
+    const idQuery = `SELECT id, title, author FROM Books WHERE id = @id`;
+    const request = connection.request();
+    request.input("id", bookId); // Bind the id parameter
+    // Bind parameters from the request body
+    request.input("title", updateBookData.title);
+    request.input("author", updateBookData.author);
+    const result = await request.query(sqlQuery);
+    const idResult = await request.query(idQuery);
+
+    // If book ID is not found
+    if (!idResult.recordset[0]) {
+      return res.status(404).send("Book not found");
+    }
+
+    // Attempt to fetch the book to return it
+    const updateBookId = result.recordset[0].id;
+
+    // Directly fetch the book here instead of calling a function
+    // Re-using the same connection before closing it in finally
+    const getUpdateBookQuery = `SELECT id, title, author FROM Books WHERE id = @id`;
+    const getUpdateBookRequest = connection.request();
+    getUpdateBookRequest.input("id", updateBookId);
+    const updateBookResult = await getUpdateBookRequest.query(getUpdateBookQuery);
+
+    res.status(200).json(idResult.recordset[0]); // Send 200 Success status and the updated book data
+  } catch (error) {
+    console.error("Error in PUT /books:", error);
+    // Database errors due to invalid data (e.g., missing required fields) will likely be caught here
+    res.status(500).send("Error updating book");
+  } finally {
+    if (connection) {
+      try {
+        await connection.close(); // Close the database connection
+      } catch (closeError) {
+        console.error("Error closing database connection:", closeError);
+      }
+    }
+  }
+});
+
+
+// --- DELETE ROUTE ---
+
+// DELETE update book by ID
+app.delete("/books/:id", async (req, res) => {
+  const bookId = parseInt(req.params.id);
+  if (isNaN(bookId)) {
+    return res.status(400).send("Invalid book ID");
+  }
+  
+  let connection;
+  try {
+    connection = await sql.connect(dbConfig); // Get the database connection
+    const sqlQuery = `DELETE Books WHERE id = @id`;
+    const idQuery = `SELECT id, title, author FROM Books WHERE id = @id`;
+    const request = connection.request();
+    request.input("id", bookId);
+    const idResult = await request.query(idQuery);
+    // If book ID is not found
+    if (!idResult.recordset[0]) {
+      return res.status(404).send("Book not found");
+    }
+    const result = await request.query(sqlQuery);
+    res.status(204).send("Book deleted."); // Send 204 no content to signal the book has been deleted
+  } catch (error) {
+    console.error("Error in DELETE /books:", error);
+    // Database errors due to invalid data (e.g., missing required fields) will likely be caught here
+    res.status(500).send("Error deleting book");
+  } finally {
+    if (connection) {
+      try {
+        await connection.close(); // Close the database connection
+      } catch (closeError) {
+        console.error("Error closing database connection:", closeError);
+      }
+    }
+  }
+});
