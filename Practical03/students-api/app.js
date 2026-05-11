@@ -66,7 +66,7 @@ app.get("/students/:id", async (req, res) => {
     connection = await sql.connect(dbConfig);
     const sqlQuery = `SELECT student_id, name, address FROM Students WHERE student_id = @id`;
     const request = connection.request();
-    request.input("student_id", studentId);
+    request.input("id", studentId);
     const result = await request.query(sqlQuery);
 
     if (!result.recordset[0]) {
@@ -108,7 +108,7 @@ app.post("/students", async (req, res) => {
 
     const getNewStudentQuery = `SELECT student_id, name, address FROM Students WHERE student_id = @id`;
     const getNewStudentRequest = connection.request();
-    getNewStudentRequest.input("student_id", newStudentId);
+    getNewStudentRequest.input("id", newStudentId);
     const newStudentResult = await getNewStudentRequest.query(getNewStudentQuery);
 
     res.status(201).json(newStudentResult.recordset[0]);
@@ -144,7 +144,7 @@ app.put("/students/:id", async (req, res) => {
     const sqlQuery = `UPDATE Students SET name = @name, address = @address WHERE student_id LIKE @id; SELECT SCOPE_IDENTITY() AS student_id;`;
     const idQuery = `SELECT student_id, name, address FROM Students WHERE student_id = @id`;
     const request = connection.request();
-    request.input("student_id", studentId);
+    request.input("id", studentId);
 
     request.input("name", updateStudentData.name);
     request.input("address", updateStudentData.address);
@@ -159,7 +159,7 @@ app.put("/students/:id", async (req, res) => {
 
     const getUpdateStudentQuery = `SELECT student_id, name, address FROM Students WHERE student_id = @id`;
     const getUpdateStudentRequest = connection.request();
-    getUpdateStudentRequest.input("student_id", updateStudentId);
+    getUpdateStudentRequest.input("id", updateStudentId);
     const updateStudentResult = await getUpdateStudentRequest.query(getUpdateStudentQuery);
 
     res.status(200).json(idResult.recordset[0]);
@@ -194,7 +194,7 @@ app.delete("/students/:id", async (req, res) => {
     const sqlQuery = `DELETE Students WHERE student_id = @id`;
     const idQuery = `SELECT student_id, name, address FROM Students WHERE student_id = @id`;
     const request = connection.request();
-    request.input("student_id", studentId);
+    request.input("id", studentId);
     const idResult = await request.query(idQuery);
 
     if (!idResult.recordset[0]) {

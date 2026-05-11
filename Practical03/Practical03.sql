@@ -1,3 +1,5 @@
+use bed_db
+GO
 /*
 CREATE TABLE Books (
   id INT IDENTITY(1,1) PRIMARY KEY,
@@ -19,9 +21,10 @@ CREATE TABLE Students (
 
 INSERT INTO Students (name, address)
 VALUES
-  ('Baba Booey', '69 Bruh Street'),
-  ('Ricky Aster', '67 Knotfunni Lane');
+  ('John Doe', '69 Bruh Street'),
+  ('Foo Bar', '67 Knotfunni Lane');
 */
 
-SELECT id, title, author FROM bed_db.dbo.Books;
+
+SELECT id, title, author FROM Books;
 SELECT student_id, name, address FROM Students;
