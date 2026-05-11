@@ -193,7 +193,7 @@ app.put("/books/:id", async (req, res) => {
 
 // --- DELETE ROUTE ---
 
-// DELETE update book by ID
+// DELETE delete book by ID
 app.delete("/books/:id", async (req, res) => {
   const bookId = parseInt(req.params.id);
   if (isNaN(bookId)) {
