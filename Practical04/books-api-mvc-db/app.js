@@ -27,6 +27,7 @@ app.get("/books/:id", validateBookId, bookController.getBookById); // Use valida
 app.post("/books", validateBook, bookController.createBook); // Use validateBook middleware
 // Add routes for PUT/DELETE if implemented, applying appropriate middleware
 app.put("/books/:id", validateBookId, bookController.updateBook);
+app.delete("/books/:id", validateBookId, bookController.deleteBook)
 
 
 // Start server

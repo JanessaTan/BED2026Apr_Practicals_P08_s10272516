@@ -55,9 +55,26 @@ async function updateBook(req, res) {
   } 
 }
 
+async function deleteBook(req, res) {
+  try {
+    const id = parseInt(req.params.id);
+    const bookId = await bookModel.getBookById(id);
+    if (!bookId) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+
+    const book = await bookModel.deleteBook(id);
+    res.status(204).send("Book deleted.");
+  } catch (error) {
+    console.error("Controller error:", error);
+    res.status(500).json({ error: "Error deleting book" });
+  }
+}
+
 module.exports = {
   getAllBooks,
   getBookById,
   createBook,
-  updateBook
+  updateBook,
+  deleteBook
 };

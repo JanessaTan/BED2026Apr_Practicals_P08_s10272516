@@ -84,18 +84,44 @@ async function updateBook(id, updateBookData) {
   let connection;
   try {
     connection = await sql.connect(dbConfig);
-    const sqlQuery = "UPDATE Books SET title = @title, author = @author WHERE id LIKE @id; SELECT SCOPE_IDENTITY() AS id;";
+    const query = "UPDATE Books SET title = @title, author = @author WHERE id LIKE @id; SELECT SCOPE_IDENTITY() AS id;";
     const idQuery = "SELECT id, title, author FROM Books WHERE id = @id";
     const request = connection.request();
     request.input("id", id);
-
     request.input("title", updateBookData.title);
     request.input("author", updateBookData.author);
-    const result = await request.query(sqlQuery);
+    const result = await request.query(query);
     const idResult = await request.query(idQuery);
 
-    const updatedBookId = result.recordset[0].id;
+    if (idResult.recordset.length === 0) {
+      return null; // Book not found
+    }
+
     return await getBookById(id);
+  } catch (error) {
+    console.error("Database error:", error);
+    throw error;
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection:", err);
+      }
+    }
+  }
+}
+
+async function deleteBook(id) {
+  let connection;
+  try {
+    connection = await sql.connect(dbConfig);
+    const query = "DELETE Books WHERE id = @id";
+    const idQuery = "SELECT id, title, author FROM Books WHERE id = @id";
+    const request = connection.request();
+    request.input("id", id);
+    const idResult = await request.query(idQuery);
+    const result = await request.query(query);
   } catch (error) {
     console.error("Database error:", error);
     throw error;
@@ -115,5 +141,6 @@ module.exports = {
   getAllBooks,
   getBookById,
   createBook,
-  updateBook
+  updateBook,
+  deleteBook
 };
