@@ -38,8 +38,26 @@ async function createBook(req, res) {
   }
 }
 
+async function updateBook(req, res) {
+  try {
+    const id = parseInt(req.params.id);
+    const book = await bookModel.getBookById(id);
+    if (!book) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+    const updateBookData = req.body
+
+    const updatedBook = await bookModel.updateBook(id, req.body);
+    res.status(200).json(updateBookData);
+  } catch (error) {
+    console.error("Controller error:", error);
+    res.status(500).json({ error: "Error updating book" });
+  } 
+}
+
 module.exports = {
   getAllBooks,
   getBookById,
   createBook,
+  updateBook
 };

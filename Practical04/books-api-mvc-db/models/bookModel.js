@@ -57,8 +57,7 @@ async function createBook(bookData) {
   let connection;
   try {
     connection = await sql.connect(dbConfig);
-    const query =
-      "INSERT INTO Books (title, author) VALUES (@title, @author); SELECT SCOPE_IDENTITY() AS id;";
+    const query = "INSERT INTO Books (title, author) VALUES (@title, @author); SELECT SCOPE_IDENTITY() AS id;";
     const request = connection.request();
     request.input("title", bookData.title);
     request.input("author", bookData.author);
@@ -80,8 +79,41 @@ async function createBook(bookData) {
   }
 }
 
+// update book
+async function updateBook(id, updateBookData) {
+  let connection;
+  try {
+    connection = await sql.connect(dbConfig);
+    const sqlQuery = "UPDATE Books SET title = @title, author = @author WHERE id LIKE @id; SELECT SCOPE_IDENTITY() AS id;";
+    const idQuery = "SELECT id, title, author FROM Books WHERE id = @id";
+    const request = connection.request();
+    request.input("id", id);
+
+    request.input("title", updateBookData.title);
+    request.input("author", updateBookData.author);
+    const result = await request.query(sqlQuery);
+    const idResult = await request.query(idQuery);
+
+    const updatedBookId = result.recordset[0].id;
+    return await getBookById(id);
+  } catch (error) {
+    console.error("Database error:", error);
+    throw error;
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection:", err);
+      }
+    }
+  }
+}
+
+
 module.exports = {
   getAllBooks,
   getBookById,
   createBook,
+  updateBook
 };
