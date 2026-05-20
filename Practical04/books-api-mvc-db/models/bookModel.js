@@ -79,7 +79,7 @@ async function createBook(bookData) {
   }
 }
 
-// update book
+// Update book
 async function updateBook(id, updateBookData) {
   let connection;
   try {
@@ -112,6 +112,7 @@ async function updateBook(id, updateBookData) {
   }
 }
 
+// Delete book
 async function deleteBook(id) {
   let connection;
   try {

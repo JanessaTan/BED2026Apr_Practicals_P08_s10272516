@@ -21,9 +21,8 @@ CREATE TABLE Students (
 
 INSERT INTO Students (name, address)
 VALUES
-  ('John Doe', '69 Bruh Street'),
-  ('Foo Bar', '67 Knotfunni Lane');
+  ('John Doe', '69 Placeholder Street'),
+  ('Baba Booey', '67 Knotfunni Lane');
 */
-
 SELECT id, title, author FROM Books;
 SELECT student_id, name, address FROM Students;

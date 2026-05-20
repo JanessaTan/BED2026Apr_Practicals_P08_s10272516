@@ -38,6 +38,7 @@ async function createBook(req, res) {
   }
 }
 
+// Update book
 async function updateBook(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -55,6 +56,7 @@ async function updateBook(req, res) {
   } 
 }
 
+// Delete book
 async function deleteBook(req, res) {
   try {
     const id = parseInt(req.params.id);
