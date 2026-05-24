@@ -64,8 +64,7 @@ async function fetchBooks() {
 function viewBookDetails(bookId) {
   console.log("View details for book ID:", bookId);
   // In a real app, redirect to view.html or show a modal
-  // window.location.href = `view.html?id=${bookId}`; // Assuming you create view.html
-  alert(`View details for book ID: ${bookId} (Not implemented yet)`);
+  window.location.href = `view.html?id=${bookId}`; // Assuming you create view.html
 }
 
 function editBook(bookId) {
@@ -79,17 +78,40 @@ function handleDeleteClick(event) {
   const bookId = event.target.getAttribute("data-id");
   console.log("Attempting to delete book with ID:", bookId);
   // --- Start of code for learners to complete ---
-  alert(
-    `Attempting to delete book with ID: ${bookId} (Not implemented yet)`
-  );
   // TODO: Implement the fetch DELETE request here
+  async function deleteBook(bookId) {
+    try {
+      const bookId = event.target.getAttribute("data-id");
+      const response = await fetch(`${apiBaseUrl}/books/${bookId}`, {
+        method: 'DELETE' // TODO: On successful deletion, remove the book element from the DOM
+      });
+      console.log(response);
+      const responseBody = response.headers
+        .get("content-type")
+        ?.includes("application/json")
+        ? await response.json()
+        : { message: response.statusText };
   // TODO: Handle success (204) and error responses (404, 500)
-  // TODO: On successful deletion, remove the book element from the DOM
+      if (response.status === 204) {
+        alert(`Book with ID ${bookId} deleted successfully.`);
+        window.location.href = 'index.html'
+      } else if (response.status === 404) {
+        alert(`Book with ID ${bookId} not found.`);
+      } else {
+          const errorBody = await response.json();
+          throw new Error(`API error! status: ${response.status}, message: ${errorBody.message || response.statusText}`);
+      }
+    } catch (error) {
+        console.error('Error deleting book:', error);
+        alert(`Failed to delete book: ${error.message}`);
+    }
+  }
   // --- End of code for learners to complete ---
+  deleteBook(bookId)
 }
 
 // Fetch books when the button is clicked
 fetchBooksBtn.addEventListener("click", fetchBooks);
 
 // Optionally, fetch books when the page loads
-// window.addEventListener('load', fetchBooks); // Or call fetchBooks() directly
+window.addEventListener('load', fetchBooks); // Or call fetchBooks() directly

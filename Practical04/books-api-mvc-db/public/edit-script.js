@@ -90,18 +90,52 @@ if (bookIdToEdit) {
 // Add an event listener for the form submission (for the Update operation)
 editBookForm.addEventListener("submit", async (event) => {
   event.preventDefault(); // Prevent the default browser form submission
+  messageDiv.textContent = ''; // Clear previous messages
 
-  console.log("Edit form submitted (PUT logic to be implemented)");
-  alert("Update logic needs to be implemented!"); // Placeholder alert
-
-  // TODO: Collect updated data from form fields (editTitleInput.value, editAuthorInput.value)
   // TODO: Get the book ID from the hidden input (bookIdInput.value)
-  // TODO: Implement the fetch PUT request to the API endpoint /books/:id
-  // TODO: Include the updated data in the request body (as JSON string)
-  // TODO: Set the 'Content-Type': 'application/json' header
-  // TODO: Handle the API response (check status 200 for success, 400 for validation, 404 if book not found, 500 for server error)
-  // TODO: Provide feedback to the user using the messageDiv (success or error messages)
-  // TODO: Optionally, redirect back to the index page on successful update
+  const bookId = bookIdInput.value;
+  // TODO: Collect updated data from form fields (editTitleInput.value, editAuthorInput.value)
+    const updatedBookData = {
+        title: editTitleInput.value,
+        author: editAuthorInput.value
+    };
+
+    try {
+      // TODO: Implement the fetch PUT request to the API endpoint /books/:id
+      const response = await fetch(`${apiBaseUrl}/books/${bookId}`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json' // TODO: Set the 'Content-Type': 'application/json' header
+          },
+          body: JSON.stringify(updatedBookData) // TODO: Include the updated data in the request body (as JSON string)
+      });
+
+      // TODO: Handle the API response (check status 200 for success, 400 for validation, 404 if book not found, 500 for server error)
+      if (response.status === 200) {
+            const result = await response.json();
+            messageDiv.textContent = 'Book updated successfully!'; // TODO: Provide feedback to the user using the messageDiv (success or error messages)
+            messageDiv.style.color = 'green';
+            console.log('Update Result:', result);
+            window.location.href = 'index.html'; // TODO: Optionally, redirect back to the index page on successful update
+      } else if (response.status === 400) {
+          const errorBody = await response.json();
+          messageDiv.textContent = `Validation Error: ${errorBody.message}`;
+          messageDiv.style.color = 'red';
+          console.error('Validation Error:', errorBody);
+      } else if (response.status === 404) {
+          messageDiv.textContent = 'Book not found for update.';
+          messageDiv.style.color = 'red';
+      }
+      else {
+            const errorBody = await response.json();
+            throw new Error(`API error! status: ${response.status}, message: ${errorBody.message || response.statusText}`);
+      }
+
+    } catch (error) {
+        console.error('Error updating book:', error);
+        messageDiv.textContent = `Failed to update book: ${error.message}`;
+        messageDiv.style.color = 'red';
+    }
 });
 
 // --- End of code for learners to complete ---
