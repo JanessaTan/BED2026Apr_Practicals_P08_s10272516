@@ -35,7 +35,7 @@ createStudentForm.addEventListener("submit", async (event) => {
       : { message: response.statusText };
 
     if (response.status === 201) {
-      messageDiv.textContent = `Student created successfully! ID: ${responseBody.id}`;
+      messageDiv.textContent = `Student created successfully! ID: ${responseBody.student_id}`;
       messageDiv.style.color = "green";
       createStudentForm.reset(); // Clear the form after success
       console.log("Created Student:", responseBody);

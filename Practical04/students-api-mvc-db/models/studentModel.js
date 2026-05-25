@@ -63,7 +63,7 @@ async function createStudent(studentData) {
     request.input("address", studentData.address);
     const result = await request.query(query);
 
-    const newStudentId = result.recordset[0].id;
+    const newStudentId = result.recordset[0].student_id;
     return await getStudentById(newStudentId);
   } catch (error) {
     console.error("Database error:", error);

@@ -2,7 +2,7 @@ const studentDetailsDiv = document.getElementById("studentDetails");
 const messageDiv = document.getElementById("message"); // Get reference to the message div
 const apiBaseUrl = "http://localhost:3000";
 
-// Function to get student ID from URL query parameter (e.g., edit.html?id=1)
+// Function to get student ID from URL query parameter (e.g., edit-student.html?id=1)
 function getStudentIdFromUrl() {
   const params = new URLSearchParams(window.location.search); // Get URL query parameters
   return params.get("id"); // Return the value of the 'id' parameter
@@ -52,7 +52,6 @@ async function fetchStudentData(studentId) {
   } catch (error) {
     console.error("Error fetching student data:", error);
     studentDetailsDiv.innerHTML = `<p style="color: red;">Failed to load students: ${error.message}</p>`;
-    // return null; // Indicate that fetching failed
   }
 }
 

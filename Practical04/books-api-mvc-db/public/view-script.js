@@ -52,7 +52,6 @@ async function fetchBookData(bookId) {
   } catch (error) {
     console.error("Error fetching book data:", error);
     bookDetailsDiv.innerHTML = `<p style="color: red;">Failed to load books: ${error.message}</p>`;
-    // return null; // Indicate that fetching failed
   }
 }
 

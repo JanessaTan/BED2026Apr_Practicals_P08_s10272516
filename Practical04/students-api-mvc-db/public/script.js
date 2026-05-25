@@ -63,27 +63,23 @@ async function fetchStudents() {
 // Placeholder functions for other actions (to be implemented later or in other files)
 function viewStudentDetails(studentId) {
   console.log("View details for student ID:", studentId);
-  // In a real app, redirect to view.html or show a modal
-  window.location.href = `view-student.html?id=${studentId}`; // Assuming you create view.html
+  window.location.href = `view-student.html?id=${studentId}`;
 }
 
 function editStudent(studentId) {
   console.log("Edit student with ID:", studentId);
-  // In a real app, redirect to edit.html with the student ID
-  window.location.href = `edit-student.html?id=${studentId}`; // Assuming you create edit.html
+  window.location.href = `edit-student.html?id=${studentId}`;
 }
 
-// Placeholder/Partial implementation for Delete (will be completed by learners)
 function handleDeleteClick(event) {
   const studentId = event.target.getAttribute("data-id");
   console.log("Attempting to delete student with ID:", studentId);
-  // --- Start of code for learners to complete ---
-  // TODO: Implement the fetch DELETE request here
+
   async function deleteStudent(studentId) {
     try {
       const studentId = event.target.getAttribute("data-id");
       const response = await fetch(`${apiBaseUrl}/students/${studentId}`, {
-        method: 'DELETE' // TODO: On successful deletion, remove the student element from the DOM
+        method: 'DELETE'
       });
       console.log(response);
       const responseBody = response.headers
@@ -91,7 +87,7 @@ function handleDeleteClick(event) {
         ?.includes("application/json")
         ? await response.json()
         : { message: response.statusText };
-  // TODO: Handle success (204) and error responses (404, 500)
+
       if (response.status === 204) {
         alert(`Student with ID ${studentId} deleted successfully.`);
         window.location.href = 'students.html'
@@ -106,7 +102,6 @@ function handleDeleteClick(event) {
         alert(`Failed to delete student: ${error.message}`);
     }
   }
-  // --- End of code for learners to complete ---
   deleteStudent(studentId)
 }
 

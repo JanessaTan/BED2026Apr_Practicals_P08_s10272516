@@ -30,9 +30,8 @@ async function getStudentById(req, res) {
 // Create new student
 async function createStudent(req, res) {
   try {
-    const newStudentData = req.body
     const newStudent = await studentModel.createStudent(req.body);
-    res.status(201).json(newStudentData);
+    res.status(201).json(newStudent);
   } catch (error) {
     console.error("Controller error:", error);
     res.status(500).json({ error: "Error creating student" });

@@ -9,7 +9,7 @@ const editAddressInput = document.getElementById("editAddress"); // Input for th
 // Base URL for the API.
 const apiBaseUrl = "http://localhost:3000";
 
-// Function to get student ID from URL query parameter (e.g., edit.html?id=1)
+// Function to get student ID from URL query parameter (e.g., edit-student.html?id=1)
 function getStudentIdFromUrl() {
   const params = new URLSearchParams(window.location.search); // Get URL query parameters
   return params.get("id"); // Return the value of the 'id' parameter
@@ -81,42 +81,35 @@ if (studentIdToEdit) {
   // Handle the case where no student ID was provided in the URL
   loadingMessageDiv.textContent = "No student ID specified for editing.";
   messageDiv.textContent =
-    "Please provide a student ID in the URL (e.g., edit.html?id=1).";
+    "Please provide a student ID in the URL (e.g., edit-student.html?id=1).";
   messageDiv.style.color = "orange";
 }
-
-// --- Start of code for learners to complete (Form Submission / PUT Request) ---
 
 // Add an event listener for the form submission (for the Update operation)
 editStudentForm.addEventListener("submit", async (event) => {
   event.preventDefault(); // Prevent the default browser form submission
   messageDiv.textContent = ''; // Clear previous messages
 
-  // TODO: Get the student ID from the hidden input (studentIdInput.value)
   const studentId = studentIdInput.value;
-  // TODO: Collect updated data from form fields (editNameInput.value, editAddressInput.value)
     const updatedStudentData = {
         name: editNameInput.value,
         address: editAddressInput.value
     };
 
     try {
-      // TODO: Implement the fetch PUT request to the API endpoint /students/:id
       const response = await fetch(`${apiBaseUrl}/students/${studentId}`, {
           method: 'PUT',
           headers: {
-              'Content-Type': 'application/json' // TODO: Set the 'Content-Type': 'application/json' header
+              'Content-Type': 'application/json'
           },
-          body: JSON.stringify(updatedStudentData) // TODO: Include the updated data in the request body (as JSON string)
+          body: JSON.stringify(updatedStudentData)
       });
 
-      // TODO: Handle the API response (check status 200 for success, 400 for validation, 404 if student not found, 500 for server error)
       if (response.status === 200) {
             const result = await response.json();
-            messageDiv.textContent = 'Student updated successfully!'; // TODO: Provide feedback to the user using the messageDiv (success or error messages)
+            messageDiv.textContent = 'Student updated successfully!';
             messageDiv.style.color = 'green';
             console.log('Update Result:', result);
-            window.location.href = 'index.html'; // TODO: Optionally, redirect back to the index page on successful update
       } else if (response.status === 400) {
           const errorBody = await response.json();
           messageDiv.textContent = `Validation Error: ${errorBody.message}`;
@@ -137,5 +130,3 @@ editStudentForm.addEventListener("submit", async (event) => {
         messageDiv.style.color = 'red';
     }
 });
-
-// --- End of code for learners to complete ---
