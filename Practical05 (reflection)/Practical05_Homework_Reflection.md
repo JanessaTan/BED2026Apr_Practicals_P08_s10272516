@@ -17,13 +17,14 @@
 3.**Challenges and Problem Solving:**
 
 *What was the most challenging aspect for you across Practical 03, 04, and 05? Describe the problem and how you approached solving it.*
-- in Practical 03, I was unsure if I had to change the server name placeholder value "localhost" in dbConfig.js. Because I thought it was necessary, I encountered an error right off the bat.
-- 
+- In Practical 03, I was unsure if I had to change the server name placeholder value "localhost" in dbConfig.js. Because I thought it was necessary, I encountered an error right off the bat, so simply leaving the value alone solved the problem.
+- In Practical 04, I found it challenging to identify which parts of the code needed to be refactored and to which section (model, data or validation). I especially struggled with various bugs related to incorrectly identifying the functions that needed to change in the refactoring process. I overcame this hurdle by researching the node.js and MVC documentation to understand the significance of each part, which gave me a better understanding of how to refactor the code.
+- In Practical 05, my biggest challenge was fixing bugs (and refactoring, in a way). I was certain that after following the format of the Part A lab exercise, there would be few problems with Part B. However, I failed to realise that back in Practical 04, I made a mistake in the studentController which — only when combined with the view implementation — caused the id to return as undefined after the creation of a student. After comparing the code of both book and student APIs more carefully, I managed to fix the logic of that function.
 
 *Thinking critically, if you had to add a new feature (e.g., adding a "genre" field to books, or implementing user authentication), how would the current MVC structure with a separate View layer help you approach this task in a more organized and efficient way compared to the initial Practical 03 structure?*
-- 5trtutruty
+- Since model, view and controller are now separate, it is possible to identify which parts of the code need to be modified or what needs to be created to include these features. For example, new data fields would mean the model needs modification (changes to the data retrieved), and a new page would mean the view needs modification (new HTML and JavaScript code are required). The view also makes it easier to test code as it sends requests to and receives responses directly from the API. The controller should also be updated for each of these changes since it is the intermediary between both.
 
 4.**Experiential Learning:**
 
 *How did the hands-on coding and refactoring in these practicals help you understand the concepts of MVC, validation, error handling, and parameterized queries compared to just reading about them?*
-- drfhdjtjfj
+- It is more engaging and educational — I can practice writing code, which helps me understand the logic, as well as see the newly introduced concepts in action. It also prompted me to conduct further research to fix the bugs or implement optional features.
