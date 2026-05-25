@@ -10,7 +10,7 @@ const studentController = require("./controllers/studentController");
 const {
   validateStudent,
   validateStudentId,
-} = require("./middlewares/studentValidation"); // import Student Validation Middleware
+} = require("./middlewares/studentValidation");
 
 // Create Express app
 const app = express();
