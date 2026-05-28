@@ -39,10 +39,13 @@ app.delete("/books/:id", validateBookId, bookController.deleteBook)
 
 // Routes for users
 app.get("/users", userController.getAllUsers); // Get all users
+app.get("/users/search", userController.searchUsers);
+app.get("/users/with-books", userController.getUsersWithBooks);
 app.get("/users/:id", userController.getUserById); // Get user by ID
 app.post("/users", userController.createUser); // Create user
 app.put("/users/:id", userController.updateUser); // Update user
 app.delete("/users/:id", userController.deleteUser); // Delete user
+
 
 // Start server
 app.listen(port, () => {

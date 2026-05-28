@@ -1,4 +1,14 @@
-const User = require("../models/userModel");
+const userModel = require("../models/userModel");
+
+async function getUsersWithBooks(req, res) {
+  try {
+    const users = await userModel.getUsersWithBooks();
+    res.json(users);
+  } catch (error) {
+    console.error("Controller error in getUsersWithBooks:", error);
+    res.status(500).json({ message: "Error fetching users with books" });
+  }
+}
 
 // Get all users
 async function getAllUsers(req, res) {
@@ -81,7 +91,7 @@ async function searchUsers(req, res) {
   }
 
   try {
-    const users = await User.searchUsers(searchTerm);
+    const users = await userModel.searchUsers(searchTerm);
     res.json(users);
   } catch (error) {
     console.error("Controller error in searchUsers:", error);
@@ -96,4 +106,5 @@ module.exports = {
   updateUser,
   deleteUser,
   searchUsers,
+  getUsersWithBooks
 };
