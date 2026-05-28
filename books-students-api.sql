@@ -24,5 +24,6 @@ VALUES
   ('John Doe', '69 Placeholder Street'),
   ('Baba Booey', '67 Knotfunni Lane');
 */
+
 SELECT id, title, author FROM Books;
 SELECT student_id, name, address FROM Students;
