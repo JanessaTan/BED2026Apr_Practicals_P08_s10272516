@@ -3,8 +3,8 @@ const path = require("path");
 const express = require("express");
 const sql = require("mssql");
 const dotenv = require("dotenv");
-// Load environment variables
-dotenv.config();
+
+dotenv.config(); // Loads environment variables from your .env file, making sensitive configuration available via process.env.
 
 const bookController = require("./controllers/bookController");
 const {
@@ -19,6 +19,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware (Parsing request bodies)
+// Middleware is applied using app.use() to handle incoming request bodies (express.json, express.urlencoded).
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
 
@@ -28,7 +29,7 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bo
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes for books
-// Link specific URL paths to the corresponding controller functions
+// Routes are defined using app.get, app.post, etc., mapping specific URL paths to the corresponding functions in the bookController.
 // Apply middleware *before* the controller function for routes that need it
 app.get("/books", bookController.getAllBooks);
 app.get("/books/:id", validateBookId, bookController.getBookById); // Use validateBookId middleware
@@ -44,7 +45,7 @@ app.post("/users", userController.createUser); // Create user
 app.put("/users/:id", userController.updateUser); // Update user
 app.delete("/users/:id", userController.deleteUser); // Delete user
 
-// Start server
+// Start web server on the configured port
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

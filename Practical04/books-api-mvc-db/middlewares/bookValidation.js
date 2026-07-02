@@ -1,6 +1,7 @@
 const Joi = require("joi"); // Import Joi for validation
 
 // Validation schema for books (used for POST/PUT)
+// Defines the expected structure and constraints for book data (title, author). Custom .messages() provide user-friendly error feedback.
 const bookSchema = Joi.object({
   title: Joi.string().min(1).max(50).required().messages({
     "string.base": "Title must be a string",
@@ -22,7 +23,7 @@ const bookSchema = Joi.object({
 // Middleware to validate book data (for POST/PUT)
 function validateBook(req, res, next) {
   // Validate the request body against the bookSchema
-  const { error } = bookSchema.validate(req.body, { abortEarly: false }); // abortEarly: false collects all errors
+  const { error } = bookSchema.validate(req.body, { abortEarly: false }); // abortEarly: false ensures all validation errors are captured, not just the first one.
 
   if (error) {
     // If validation fails, format the error messages and send a 400 response

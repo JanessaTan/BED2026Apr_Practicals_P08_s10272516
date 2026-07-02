@@ -1,6 +1,6 @@
 const express = require("express");
 const sql = require("mssql"); // Assuming you've installed mssql
-const dbConfig = require("./dbConfig"); // Import the dbConfig object in your app.js file
+const dbConfig = require("./dbConfig"); // Import the dbConfig object in your app.js file to access the database credentials
 
 const app = express(); // create an instance of the Express back-end application
 const port = process.env.PORT || 3000; // Use environment variable or default port
@@ -10,7 +10,7 @@ app.use(express.urlencoded()); // middleware inbuilt in express to recognize the
 
 app.listen(port, async () => {
   try {
-    // Connect to the database
+    // Establish a connection to the database using the configuration details
     await sql.connect(dbConfig);
     console.log("Database connection established successfully");
   } catch (err) {
@@ -22,7 +22,7 @@ app.listen(port, async () => {
   console.log(`Server listening on port ${port}`);
 });
 
-// Close the connection pool on SIGINT signal
+// Close the connection pool on SIGINT signal (usually Ctrl+C)
 process.on("SIGINT", async () => {
   console.log("Server is gracefully shutting down");
   // Perform cleanup tasks (e.g., close database connections)
@@ -42,7 +42,7 @@ app.get("/books", async (req, res) => {
     const sqlQuery = `SELECT id, title, author FROM Books`; // Select specific columns
     const request = connection.request();
     const result = await request.query(sqlQuery);
-    res.json(result.recordset); // Send the result as JSON
+    res.json(result.recordset); // Send the result as JSON array
   } catch (error) {
     console.error("Error in GET /books:", error);
     res.status(500).send("Error retrieving books"); // Send a 500 error on failure
@@ -228,3 +228,10 @@ app.delete("/books/:id", async (req, res) => {
     }
   }
 });
+
+
+/*
+Takeaways:
+- writing the necessary SQL queries (SELECT, INSERT)
+- using the mssql package's methods (connection.request(), request.input(), request.query()) to perform basic Read (Get All, Get By ID) and Create operations directly from your Node.js application code.
+*/

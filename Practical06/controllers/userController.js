@@ -13,9 +13,10 @@ async function getUsersWithBooks(req, res) {
 // Get all users
 async function getAllUsers(req, res) {
   try {
-    const users = await userModel.getAllUsers();
-    res.json(users);
+    const users = await userModel.getAllUsers(); // Call the userModel.getAllUsers method to retrieve all users.
+    res.json(users); // Upon successful retrieval, return a response with the list of user objects.
   } catch (error) {
+    // Handle potential errors during user retrieval and return appropriate error responses.
     console.error("Controller error:", error);
     res.status(500).json({ error: "Error retrieving users" });
   }
@@ -86,13 +87,14 @@ async function deleteUser(req, res) {
 async function searchUsers(req, res) {
   const searchTerm = req.query.searchTerm; // Extract search term from query params
 
+  // Check for a missing searchTerm and sends a 400 Bad Request if it's not provided.
   if (!searchTerm) {
     return res.status(400).json({ message: "Search term is required" });
   }
 
   try {
-    const users = await userModel.searchUsers(searchTerm);
-    res.json(users);
+    const users = await userModel.searchUsers(searchTerm); // calls the static searchUsers method in the User model.
+    res.json(users); // Upon successful search, the retrieved users are sent as a JSON response.
   } catch (error) {
     console.error("Controller error in searchUsers:", error);
     res.status(500).json({ message: "Error searching users" });

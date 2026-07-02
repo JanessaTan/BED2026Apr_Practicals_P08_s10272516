@@ -5,17 +5,17 @@ const dbConfig = require("../dbConfig");
 async function getAllUsers() {
   let connection;
   try {
-    connection = await sql.connect(dbConfig);
-    const query = "SELECT id, username, email FROM Users";
-    const result = await connection.request().query(query);
-    return result.recordset;
+    connection = await sql.connect(dbConfig); // Connect to the MSSQL database.
+    const query = "SELECT id, username, email FROM Users"; // Retrieve all user data from the Users table.
+    const result = await connection.request().query(query); // Execute the query using the MSSQL library and handle any errors.
+    return result.recordset; // Return an array of user objects constructed from the retrieved data.
   } catch (error) {
     console.error("Database error:", error);
     throw error;
   } finally {
     if (connection) {
       try {
-        await connection.close();
+        await connection.close(); // Close the connection to the database.
       } catch (err) {
         console.error("Error closing connection:", err);
       }
@@ -137,12 +137,13 @@ async function deleteUser(id) {
   }
 }
 
-async function searchUsers(searchTerm) {
+async function searchUsers(searchTerm) { // Takes a searchTerm as input (username or email fragment).
   let connection; // Declare connection outside try for finally access
   try {
-    connection = await sql.connect(dbConfig);
+    connection = await sql.connect(dbConfig); // It connects to the MSSQL database.
 
     // Use parameterized query to prevent SQL injection
+    // SQL query uses LIKE with wildcards (%) to perform a case-insensitive search for the searchTerm in both username and email columns.
     const query = `
     SELECT *
     FROM Users
@@ -150,6 +151,7 @@ async function searchUsers(searchTerm) {
         OR email LIKE '%' + @searchTerm + '%'
     `;
 
+    // The query results are retrieved using connection.request().query and returned as the recordset.
     const request = connection.request();
     request.input("searchTerm", sql.NVarChar, searchTerm); // Explicitly define type
     const result = await request.query(query);
@@ -222,6 +224,7 @@ async function getUsersWithBooks() {
     // Group users and their books
     const usersWithBooks = {};
     for (const row of result.recordset) {
+      // An object is created for each user, containing their details and an array of borrowed book objects.
       const userId = row.user_id;
       if (!usersWithBooks[userId]) {
         usersWithBooks[userId] = {
