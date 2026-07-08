@@ -26,7 +26,7 @@ app.get("/books/:bookId", bookController.getBookById);
 app.get("/users", userController.getAllUsers);
 app.get("/users/:username", userController.getUserByUsername);
 app.put("/books/:bookId/availability", bookController.updateBook); // Update book availability (Librarians only)
-// app.post("/register", verifyJWT, userController.registerUser); // User registration
+app.post("/register", userController.registerUser); // User registration
 // app.post("/login", verifyJWT, userController.login); // Login
 
 

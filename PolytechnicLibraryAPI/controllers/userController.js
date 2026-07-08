@@ -1,4 +1,6 @@
 const userModel = require("../models/user");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // Get all users
 async function getAllUsers(req, res) {
@@ -27,24 +29,80 @@ async function getUserByUsername(req, res) {
   }
 }
 
+// User Registration and Password Hashing
 async function registerUser(req, res) {
+  const { username, password, role } = req.body;
+  console.log(username, password, role);
+    // Basic validation
+    if (!username || !password ||!role) {
+      return res.status(400).json({ message: "Username, password and role are required" });
+    }
+
+    // Validate role
+    if (role !== "member" && role !== "librarian") {
+      return res.status(400).json({ message: "Role must be either 'member' or 'librarian'" });
+    }
+
+    // Password strength
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    }
+  
     try {
-    const register = await userModel.registerUser();
-    res.json(register);
-  } catch (error) {
-    console.error("Controller error:", error);
-    res.status(500).json({ error: "Error registering user" });
-  }
+      // Check for existing username
+      const existingUser = await userModel.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+  
+      // Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+  
+      // Create user in database
+      const newUser = await userModel.registerUser(req.body);
+
+      return res.status(201).json({ message: "User created successfully" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
 }
 
+// JWT Token Generation during Login
 async function login(req, res) {
+  const { username, password } = req.body;
+    
+    // Basic validation
+    if (!username || !password) {
+      return res.status(400).json({message: "Username and password are required"})
+    }
+  
     try {
-    const login = await userModel.login();
-    res.json(login);
-  } catch (error) {
-    console.error("Controller error:", error);
-    res.status(500).json({ error: "Error logging in user" });
-  }
+      // Retrieve user from DB
+      const user = await getUserByUsername(username);
+      if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+  
+      // Compare password with hash
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+  
+      // Generate JWT token
+      const payload = {
+        id: user.id,
+        role: user.role,
+      };
+      const token = jwt.sign(payload, "your_secret_key", { expiresIn: "3600s" }); // Expires in 1 hour
+  
+      return res.status(200).json({ token });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 module.exports = {

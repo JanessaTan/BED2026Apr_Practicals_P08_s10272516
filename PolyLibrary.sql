@@ -4,7 +4,7 @@ GO
 CREATE TABLE UsersTable (
   user_id INT PRIMARY KEY IDENTITY,
   username VARCHAR(255) NOT NULL UNIQUE,
-  passwordHash VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   role VARCHAR(20) CHECK (role IN ('member', 'librarian'))
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE BooksTable (
 );
 
 -- Insert sample users
-INSERT INTO UsersTable (username, passwordHash, role)
+INSERT INTO UsersTable (username, password, role)
 VALUES
   ('user1', 'password', 'member'),
   ('user2', 'badpassword', 'librarian'),
@@ -33,5 +33,5 @@ VALUES
   ('The Lord of the Rings', 'J.R.R. Tolkien', 'N'),
   ('Pride and Prejudice', 'Jane Austen', 'Y');
 */
-SELECT * FROM UsersTable
 SELECT * FROM BooksTable
+SELECT * FROM UsersTable
