@@ -21,9 +21,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/books", verifyJWT, bookController.getAllBooks); // Get all books
-app.get("/books/:bookId", verifyJWT, bookController.getBookById);
-app.put("/books/:bookId/availability", verifyJWT, bookController.updateBook); // Update book availability (Librarians only)
+app.get("/books", bookController.getAllBooks); // Get all books
+app.get("/books/:bookId", bookController.getBookById);
+app.get("/users", userController.getAllUsers);
+app.get("/users/:username", userController.getUserByUsername);
+app.put("/books/:bookId/availability", bookController.updateBook); // Update book availability (Librarians only)
 // app.post("/register", verifyJWT, userController.registerUser); // User registration
 // app.post("/login", verifyJWT, userController.login); // Login
 
