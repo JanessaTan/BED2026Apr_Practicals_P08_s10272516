@@ -61,8 +61,7 @@ async function updateBook(id, updateBookData) {
     const idQuery = "SELECT * FROM BooksTable WHERE book_id = @id";
     const request = connection.request();
     request.input("id", id);
-    request.input("title", updateBookData.title);
-    request.input("author", updateBookData.author);
+    request.input("availability", updateBookData.availability);
     const result = await request.query(query);
     const idResult = await request.query(idQuery);
 

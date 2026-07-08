@@ -6,6 +6,13 @@ dotenv.config();
 
 const bookController = require("./controllers/bookController");
 
+const {
+  registerUser,
+} = require("./middlewares/userRegistration");
+const {
+  login,
+} = require("./middlewares/userLogin");
+
 const userController = require("./controllers/userController");
 
 // Create Express app
@@ -17,13 +24,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// Routes for books
-app.get("/books", bookController.getAllBooks);
-app.put("/books/:bookId/availability", bookController.updateBook);
-
-// Routes for users
-app.post("/register", userController.createUser);
-app.post("/login", userController.updateUser);
+app.get("/books", bookController.getAllBooks); // Get all books
+app.get("/books/:bookId", bookController.getBookById);
+app.put("/books/:bookId/availability", bookController.updateBook); // Update book availability (Librarians only)
+app.post("/register", registerUser, userController.createUser); // User registration (DON'T IMPLEMENT YET)
+// app.post("/login", userController.updateUser); // Login (DON'T IMPLEMENT YET)
 
 
 // Start server

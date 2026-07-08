@@ -14,7 +14,7 @@ async function getAllBooks(req, res) {
 // Get book by ID
 async function getBookById(req, res) {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.bookId);
     const book = await bookModel.getBookById(id);
     if (!book) {
       return res.status(404).json({ error: "Book not found" });
@@ -30,7 +30,7 @@ async function getBookById(req, res) {
 // Update book
 async function updateBook(req, res) {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.bookId);
     const book = await bookModel.getBookById(id);
     if (!book) {
       return res.status(404).json({ error: "Book not found" });
