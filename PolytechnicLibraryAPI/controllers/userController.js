@@ -32,7 +32,6 @@ async function getUserByUsername(req, res) {
 // User Registration and Password Hashing
 async function registerUser(req, res) {
   const { username, password, role } = req.body;
-  console.log(username, password, role);
     // Basic validation
     if (!username || !password ||!role) {
       return res.status(400).json({ message: "Username, password and role are required" });
