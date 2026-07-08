@@ -7,11 +7,8 @@ dotenv.config();
 const bookController = require("./controllers/bookController");
 
 const {
-  registerUser,
-} = require("./middlewares/userRegistration");
-const {
-  login,
-} = require("./middlewares/userLogin");
+  verifyJWT,
+} = require("./middlewares/auth");
 
 const userController = require("./controllers/userController");
 
@@ -24,11 +21,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/books", bookController.getAllBooks); // Get all books
-app.get("/books/:bookId", bookController.getBookById);
-app.put("/books/:bookId/availability", bookController.updateBook); // Update book availability (Librarians only)
-app.post("/register", registerUser, userController.createUser); // User registration (DON'T IMPLEMENT YET)
-// app.post("/login", userController.updateUser); // Login (DON'T IMPLEMENT YET)
+app.get("/books", verifyJWT, bookController.getAllBooks); // Get all books
+app.get("/books/:bookId", verifyJWT, bookController.getBookById);
+app.put("/books/:bookId/availability", verifyJWT, bookController.updateBook); // Update book availability (Librarians only)
+// app.post("/register", verifyJWT, userController.registerUser); // User registration
+// app.post("/login", verifyJWT, userController.login); // Login
 
 
 // Start server
