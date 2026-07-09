@@ -58,10 +58,17 @@ async function registerUser(req, res) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
   
-      // Create user in database
-      const newUser = await userModel.registerUser(req.body);
+      // Create user in database (FIXED: pass the hashed password, not the plaintext one)
+      const newUser = await userModel.registerUser({
+        username,
+        password: hashedPassword,
+        role,
+      });
 
-      return res.status(201).json({ message: "User created successfully" });
+      return res.status(201).json({
+        message: "User created successfully",
+        user: { username: newUser.username, role: newUser.role },
+      });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: "Internal server error" });
@@ -78,8 +85,9 @@ async function login(req, res) {
     }
   
     try {
-      // Retrieve user from DB
-      const user = await getUserByUsername(username);
+      // Retrieve user from DB (FIXED: call the model function, not the local
+      // controller handler of the same name, which expects (req, res) params)
+      const user = await userModel.getUserByUsername(username);
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -92,7 +100,7 @@ async function login(req, res) {
   
       // Generate JWT token
       const payload = {
-        id: user.id,
+        id: user.user_id, // FIXED: DB column is user_id, not id
         role: user.role,
       };
       const token = jwt.sign(payload, "your_secret_key", { expiresIn: "3600s" }); // Expires in 1 hour

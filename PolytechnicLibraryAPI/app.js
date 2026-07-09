@@ -21,13 +21,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/books", bookController.getAllBooks); // Get all books
+app.get("/books", verifyJWT, bookController.getAllBooks); // Get all books (members & librarians)
 app.get("/books/:bookId", bookController.getBookById);
 app.get("/users", userController.getAllUsers);
 app.get("/users/:username", userController.getUserByUsername);
-app.put("/books/:bookId/availability", bookController.updateBook); // Update book availability (Librarians only)
+app.put("/books/:bookId/availability", verifyJWT, bookController.updateBook); // Update book availability (Librarians only)
 app.post("/register", userController.registerUser); // User registration
-// app.post("/login", verifyJWT, userController.login); // Login
+app.post("/login", userController.login); // Login (FIXED: must be public - this is what issues the JWT, so it can't require one)
 
 
 // Start server

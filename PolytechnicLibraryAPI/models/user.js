@@ -1,7 +1,5 @@
 const sql = require("mssql");
 const dbConfig = require("../dbConfig");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 // Get all users
 async function getAllUsers() {
@@ -54,7 +52,7 @@ async function getUserByUsername(username) {
   }
 }
 
-// User Registration and Password Hashing
+// User Registration (persists a pre-hashed password; hashing happens in the controller)
 async function registerUser(userData) {
     let connection;
     try {
@@ -64,10 +62,11 @@ async function registerUser(userData) {
         request.input("username", userData.username);
         request.input("password", userData.password);
         request.input("role", userData.role);
-        const result = await request.query(query);
-    
-        const newUsername = result.recordset[1];
-        return await getUserByUsername(newUsername);
+        await request.query(query);
+
+        // FIXED: fetch the newly created user directly by username instead of
+        // trying to read a non-existent second row from the recordset
+        return await getUserByUsername(userData.username);
     } catch (error) {
         console.error("Database error:", error);
         throw error;
@@ -82,45 +81,8 @@ async function registerUser(userData) {
     }
 }
 
-// JWT Token Generation during Login
-async function login(req, res) {
-  const { username, password } = req.body;
-  
-  // Basic validation
-  if (!username || !password) {
-    return res.status(400).json({message: "Username and password are required"})
-  }
-
-  try {
-    // Retrieve user from DB
-    const user = await getUserByUsername(username);
-    if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    // Compare password with hash
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    // Generate JWT token
-    const payload = {
-      id: user.id,
-      role: user.role,
-    };
-    const token = jwt.sign(payload, "your_secret_key", { expiresIn: "3600s" }); // Expires in 1 hour
-
-    return res.status(200).json({ token });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-}
-
 module.exports = {
     getAllUsers,
     getUserByUsername,
-    registerUser,
-    login
+    registerUser
 };

@@ -8,20 +8,17 @@ CREATE TABLE UsersTable (
   role VARCHAR(20) CHECK (role IN ('member', 'librarian'))
 );
 
+-- Insert sample user
+INSERT INTO UsersTable (username, password, role)
+VALUES
+  ('TestUser', 'password', 'member');
+
 CREATE TABLE BooksTable (
   book_id INT PRIMARY KEY IDENTITY,
   title VARCHAR(255) NOT NULL,
   author VARCHAR(255) NOT NULL,
   availability CHAR(1) CHECK (availability IN ('Y', 'N'))
 );
-
--- Insert sample users
-INSERT INTO UsersTable (username, password, role)
-VALUES
-  ('user1', 'password', 'member'),
-  ('user2', 'badpassword', 'librarian'),
-  ('user3', 'sd309f48$ggg)@', 'member'),
-  ('user4', 'G00DpassWoRd?', 'librarian');
 
 -- Insert sample books
 INSERT INTO BooksTable (title, author, availability)
