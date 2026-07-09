@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 function verifyJWT(req, res, next) {
-  console.log("Received header:", req.headers.authorization);
   const token =
     req.headers.authorization && req.headers.authorization.split(" ")[1];
 
@@ -16,8 +15,6 @@ function verifyJWT(req, res, next) {
 
     // Check user role for authorization (replace with your logic)
     const authorizedRoles = {
-        // Only librarians can create books
-        "POST /books": ["librarian"], 
         // Anyone can view books
         "GET /books": ["member", "librarian"], 
         // Only librarians can update availability
