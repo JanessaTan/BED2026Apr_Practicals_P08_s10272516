@@ -1,4 +1,5 @@
 .env
+node_modules
 JS-Content-CheatSheet.js
 .vscode/*
 !.vscode/settings.json
