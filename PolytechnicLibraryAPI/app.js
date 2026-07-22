@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/books", verifyJWT, bookController.getAllBooks); // Get all books (members & librarians)
+app.get("/books", bookController.getAllBooks); // Get all books (members & librarians)
 app.get("/books/:bookId", bookController.getBookById); // Get book by id
 app.get("/users", userController.getAllUsers); // Get all users
 app.get("/users/:username", userController.getUserByUsername); // Get user by id
