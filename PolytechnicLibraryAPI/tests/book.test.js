@@ -63,20 +63,72 @@ describe("Book.updateBook", () => {
     beforeEach(() => {
     jest.clearAllMocks();
   });
-  // ... mock mssql and other necessary components
-  
 
   it("should update the availability of a book", async () => {
     // ... arrange: set up mock book data and mock database interaction
+    const updatedBook = {
+      book_id: 1,
+      title: "Dune",
+      author: "Frank Herbert",
+      availability: "N",
+    };
+
+    const mockRequest = {
+      query: jest.fn()
+        .mockResolvedValueOnce({ recordset: [{ book_id: 1 }] }) // 1st call: UPDATE result
+        .mockResolvedValueOnce({ recordset: [updatedBook] }) // 2nd call: idQuery result
+        .mockResolvedValueOnce({ recordset: [updatedBook] }), // 3rd: getBookById's SELECT
+      input: jest.fn().mockReturnThis(), // input() is chained, so must return `this`
+    };
+
+    const mockConnection = {
+      request: jest.fn().mockReturnValue(mockRequest),
+      close: jest.fn().mockResolvedValue(undefined),
+    };
+
+    sql.connect.mockResolvedValue(mockConnection);
+
     // ... act: call updateBook with the test data
+    const result = await Book.updateBook(1, { availability: "N" });
+
     // ... assert: check if the database was updated correctly and the updated book is returned
+    expect(sql.connect).toHaveBeenCalledTimes(2);
+    expect(mockRequest.input).toHaveBeenCalledWith("id", 1);
+    expect(mockRequest.input).toHaveBeenCalledWith("availability", "N");
+    expect(mockRequest.query).toHaveBeenCalledTimes(3);
+    expect(mockConnection.close).toHaveBeenCalledTimes(2);
+    expect(result).toEqual(updatedBook);
   });
 
   it("should return null if book with the given id does not exist", async () => {
     // ... arrange: set up mocks for a non-existent book id
+    const mockRequest = {
+      query: jest.fn()
+        .mockResolvedValueOnce({ recordset: [] }) // 1st call: UPDATE result (not used)
+        .mockResolvedValueOnce({ recordset: [] }), // 2nd call: idQuery finds no row
+      input: jest.fn().mockReturnThis(),
+    };
+
+    const mockConnection = {
+      request: jest.fn().mockReturnValue(mockRequest),
+      close: jest.fn().mockResolvedValue(undefined),
+    };
+
+    sql.connect.mockResolvedValue(mockConnection);
+
     // ... act: call updateBook
+    const result = await Book.updateBook(99, { availability: "Y" });
+
     // ... assert: expect the function to return null
+    expect(sql.connect).toHaveBeenCalledTimes(1);
+    expect(result).toBeNull();
   });
 
   // Add more tests for error scenarios (e.g., database error)
+  it("should throw an error if the database connection fails", async () => {
+    const errorMessage = "Database Error";
+    sql.connect.mockRejectedValue(new Error(errorMessage));
+    await expect(Book.updateBook(1, { availability: "N" })).rejects.toThrow(errorMessage);
+    expect(sql.connect).toHaveBeenCalledTimes(1);
+  });
 });
