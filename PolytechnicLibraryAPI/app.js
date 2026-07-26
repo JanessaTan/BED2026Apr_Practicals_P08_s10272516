@@ -1,6 +1,9 @@
 const express = require("express");
 const sql = require("mssql");
 const dotenv = require("dotenv");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger-output.json"); // Import generated spec
+
 // Load environment variables
 dotenv.config();
 
@@ -19,6 +22,9 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve the Swagger UI at a specific route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 app.get("/books", bookController.getAllBooks); // Get all books (members & librarians)
